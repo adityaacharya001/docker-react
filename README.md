@@ -2,6 +2,37 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Required Updates for Amazon Linux 2 Platform - DO NOT SKIP
+updated 8-12-2021
+
+When creating our Elastic Beanstalk environment in the next lecture, we need to select Docker running on 64bit Amazon Linux 2 and make a few changes to our project:
+
+
+This new AWS platform will conflict with the project we have built since it will look for a docker.compose.yml file to build from by default instead of a Dockerfile.
+
+To resolve this, please do the following:
+
+1. Rename the development Compose config file
+
+Rename the docker-compose.yml file to docker-compose-dev.yml. Going forward you will need to pass a flag to specify which compose file you want to build and run from:
+docker-compose -f docker-compose-dev.yml up
+docker-compose -f docker-compose-dev.yml up --build
+docker-compose -f docker-compose-dev.yml down
+
+2. Create a production Compose config file
+
+Create a docker-compose.yml file in the root of the project and paste the following:
+
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+AWS EBS will see a file named docker-compose.yml and use it to build the single container application.
+
 ## Available Scripts
 
 In the project directory, you can run:
